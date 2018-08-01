@@ -6,11 +6,12 @@
 .classpath
 .project
 bin/
-.idea
 *.iml
+.idea/
+out/
 
 # build tool
 .gradle/
 build/
 
-version.txt
+src/test/resources/test.properties

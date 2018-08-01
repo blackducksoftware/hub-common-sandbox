@@ -7,12 +7,8 @@ buildscript {
 
     dependencies {
         classpath 'com.blackducksoftware.integration:common-gradle-plugin:0.0.+'
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.0.0.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.0.3.RELEASE'
     }
-}
-
-plugins {
-    id 'groovy'
 }
 
 version = '0.0.1-SNAPSHOT'
@@ -20,15 +16,16 @@ version = '0.0.1-SNAPSHOT'
 apply plugin: 'com.blackducksoftware.integration.library'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'groovy'
 
 repositories {
-	mavenLocal()
+    mavenLocal()
 }
 
 dependencies {
-    compile 'com.blackducksoftware.integration:hub-common:29.0.0-SNAPSHOT'
+    compile 'com.blackducksoftware.integration:hub-common:36.0.0'
     compile 'org.springframework.boot:spring-boot-starter'
-    compile 'org.codehaus.groovy:groovy-all:2.4.12'
+    compile('org.codehaus.groovy:groovy')
 }
 
 springBoot { mainClassName = 'com.blackducksoftware.integration.hub.common.sandbox.Application' }

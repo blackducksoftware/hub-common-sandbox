@@ -1,0 +1,57 @@
+[
+  {
+    "specVersion": "1.1.0",
+    "spdx:name": "apache commons-fileupload",
+    "creationInfo": {
+      "spdx:creator": [
+        "Person: Eric Kerwin (ekerwin@synopsys.com)"
+      ],
+      "spdx:created": "2018-05-02T01:14:00.000Z"
+    },
+    "@id": "file://ekerwin-mac/Users/ekerwin/Documents/source/hub-prime/src/main/resources/add-commons-fileupload.jsonld",
+    "@type": "BillOfMaterials",
+    "relationship": []
+  },
+  {
+    "name": "ek-test-scan-speed",
+    "revision": "4.8.0-test",
+    "@id": "http:maven/com_blackducksoftware_integration/ek-test-scan-speed/4_8_0_test",
+    "@type": "Project",
+    "externalIdentifier": {
+      "externalSystemTypeId": "maven",
+      "externalId": "com.blackducksoftware.integration:ek-test-scan-speed:4_8_0_test",
+      "externalIdMetaData": {
+        "forge": {
+          "name": "maven",
+          "separator": ":",
+          "kbSeparator": ":"
+        },
+        "group": "com.blackducksoftware.integration",
+        "name": "ek-test-scan-speed",
+        "version": "4.8.0-test"
+      }
+    },
+    "relationship": []
+  },
+  {
+    "name": "commons-fileupload",
+    "revision": "1.2.1",
+    "@id": "http:maven/commons_fileuploado/commons_fileupload/1_2_1",
+    "@type": "Component",
+    "externalIdentifier": {
+      "externalSystemTypeId": "maven",
+      "externalId": "commons-fileupload:commons-fileupload:1.2.1",
+      "externalIdMetaData": {
+        "forge": {
+          "name": "maven",
+          "separator": ":",
+          "kbSeparator": ":"
+        },
+        "group": "commons-fileupload",
+        "name": "commons-fileupload",
+        "version": "1.2.1"
+      }
+    },
+    "relationship": []
+  }
+]
