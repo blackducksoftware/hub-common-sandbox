@@ -195,10 +195,11 @@ class Application {
 
     public HubServerConfig createHubServerConfig(IntLogger intLogger) {
         final HubServerConfigBuilder hubServerConfigBuilder = new HubServerConfigBuilder();
-        hubServerConfigBuilder.setUrl("https://qa-hub11.dc1.lan");
-        //        hubServerConfigBuilder.setUrl("https://int-hub02.dc1.lan");
+        //        hubServerConfigBuilder.setUrl(System.getenv().get("HUB_QA_URL"));
+        hubServerConfigBuilder.setUrl(System.getenv().get("INT-HUB02"));
+        //        hubServerConfigBuilder.setUrl(System.getenv().get("INT-HUB04"));
         //        hubServerConfigBuilder.setUrl(System.getenv().get("BLACKDUCK_HUB_URL"));
-        // hubServerConfigBuilder.setApiToken(System.getenv().get("BLACKDUCK_HUB_API_TOKEN"));
+        hubServerConfigBuilder.setApiToken(System.getenv().get("BLACKDUCK_HUB_API_TOKEN"));
         hubServerConfigBuilder.setUsername(System.getenv().get("BLACKDUCK_HUB_USERNAME"));
         hubServerConfigBuilder.setPassword(System.getenv().get("BLACKDUCK_HUB_PASSWORD"));
         hubServerConfigBuilder.setTimeout(120);
