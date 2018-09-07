@@ -1,13 +1,13 @@
 package com.blackducksoftware.integration.hub.common.sandbox;
 
-import com.blackducksoftware.integration.exception.IntegrationException;
-import com.blackducksoftware.integration.hub.api.generated.component.ProjectRequest;
-import com.blackducksoftware.integration.hub.api.generated.enumeration.ProjectVersionDistributionType;
-import com.blackducksoftware.integration.hub.api.generated.enumeration.ProjectVersionPhaseType;
-import com.blackducksoftware.integration.hub.api.generated.view.ProjectView;
-import com.blackducksoftware.integration.hub.service.ProjectService;
-import com.blackducksoftware.integration.hub.service.model.ProjectRequestBuilder;
-import com.blackducksoftware.integration.hub.service.model.ProjectVersionWrapper;
+import com.synopsys.integration.blackduck.api.generated.component.ProjectRequest;
+import com.synopsys.integration.blackduck.api.generated.enumeration.ProjectVersionDistributionType;
+import com.synopsys.integration.blackduck.api.generated.enumeration.ProjectVersionPhaseType;
+import com.synopsys.integration.blackduck.api.generated.view.ProjectView;
+import com.synopsys.integration.blackduck.service.ProjectService;
+import com.synopsys.integration.blackduck.service.model.ProjectRequestBuilder;
+import com.synopsys.integration.blackduck.service.model.ProjectVersionWrapper;
+import com.synopsys.integration.exception.IntegrationException;
 
 public class ProjectManager {
     private final ProjectService projectService;

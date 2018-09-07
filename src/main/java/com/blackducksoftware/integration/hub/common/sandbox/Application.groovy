@@ -23,30 +23,17 @@
  */
 package com.blackducksoftware.integration.hub.common.sandbox
 
-import com.blackducksoftware.integration.exception.EncryptionException
-import com.blackducksoftware.integration.exception.IntegrationException
-import com.blackducksoftware.integration.hub.api.generated.component.ProjectRequest
-import com.blackducksoftware.integration.hub.api.generated.discovery.ApiDiscovery
-import com.blackducksoftware.integration.hub.api.generated.view.NotificationUserView
-import com.blackducksoftware.integration.hub.api.generated.view.ProjectView
-import com.blackducksoftware.integration.hub.api.generated.view.UserView
-import com.blackducksoftware.integration.hub.api.generated.view.VersionBomPolicyStatusView
-import com.blackducksoftware.integration.hub.api.view.MetaHandler
-import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory
-import com.blackducksoftware.integration.hub.configuration.HubScanConfig
-import com.blackducksoftware.integration.hub.configuration.HubScanConfigBuilder
-import com.blackducksoftware.integration.hub.configuration.HubServerConfig
-import com.blackducksoftware.integration.hub.configuration.HubServerConfigBuilder
-import com.blackducksoftware.integration.hub.exception.DoesNotExistException
-import com.blackducksoftware.integration.hub.rest.BlackduckRestConnection
-import com.blackducksoftware.integration.hub.service.*
-import com.blackducksoftware.integration.hub.service.model.PolicyStatusDescription
-import com.blackducksoftware.integration.hub.service.model.ProjectRequestBuilder
-import com.blackducksoftware.integration.hub.service.model.ProjectVersionWrapper
-import com.blackducksoftware.integration.log.IntLogger
-import com.blackducksoftware.integration.log.Slf4jIntLogger
-import com.google.gson.Gson
-import com.google.gson.JsonParser
+import com.synopsys.integration.blackduck.api.generated.discovery.ApiDiscovery
+import com.synopsys.integration.blackduck.api.generated.view.*
+import com.synopsys.integration.blackduck.api.view.MetaHandler
+import com.synopsys.integration.blackduck.configuration.HubServerConfig
+import com.synopsys.integration.blackduck.exception.DoesNotExistException
+import com.synopsys.integration.blackduck.service.*
+import com.synopsys.integration.blackduck.service.model.PolicyStatusDescription
+import com.synopsys.integration.blackduck.service.model.ProjectVersionWrapper
+import com.synopsys.integration.exception.IntegrationException
+import com.synopsys.integration.hub.bdio.model.externalid.ExternalIdFactory
+import com.synopsys.integration.log.IntLogger
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -63,29 +50,34 @@ class Application {
 
     public static final long FIVE_SECONDS = 5 * 1000;
 
+    private static HubServices hubServices = new HubServices();
+
     static void main(final String[] args) {
         new SpringApplicationBuilder(Application.class).logStartupInfo(false).run(args)
     }
 
     @PostConstruct
     void init() throws Exception {
-        createPolicyViolation()
-        checkPolicyStatus();
-        checkPolicyStatus();
-        checkPolicyStatus();
-        checkPolicyStatus();
-        checkPolicyStatus();
-        checkPolicyStatus();
-        checkPolicyStatus();
-        checkPolicyStatus();
-        checkPolicyStatus();
-        checkPolicyStatus();
+        HubServicesFactory hubServicesFactory = hubServices.createHubServicesFactory();
+
+        HubService hubService = hubServicesFactory.createHubService();
+        ProjectService projectService = hubServicesFactory.createProjectService();
+        ComponentService componentService = hubServicesFactory.createComponentService();
+
+        ProjectView demo = projectService.getProjectByName("Black Ducky Demo");
+        List<ProjectVersionView> versions = hubService.getAllResponses(demo, ProjectView.VERSIONS_LINK_RESPONSE);
+
+        versions.each {
+            println it.versionName + " " + it._meta.href
+            List<VulnerableComponentView> vulnerableComponents = projectService.getVulnerableComponentsForProjectVersion(it);
+            println vulnerableComponents.size();
+        }
     }
 
     void createPolicyViolation() {
-        IntLogger intLogger = createIntLogger();
-        HubServerConfig hubServerConfig = createHubServerConfig(intLogger);
-        HubServicesFactory hubServicesFactory = createHubServicesFactory(intLogger, hubServerConfig);
+        IntLogger intLogger = hubServices.createIntLogger();
+        HubServerConfig hubServerConfig = hubServices.createHubServerConfig(intLogger);
+        HubServicesFactory hubServicesFactory = hubServices.createHubServicesFactory(intLogger, hubServerConfig);
 
         ProjectService projectService = hubServicesFactory.createProjectService();
         PolicyRuleService policyRuleService = hubServicesFactory.createPolicyRuleService();
@@ -119,9 +111,9 @@ class Application {
     }
 
     void checkPolicyStatus() {
-        IntLogger intLogger = createIntLogger();
-        HubServerConfig hubServerConfig = createHubServerConfig(intLogger);
-        HubServicesFactory hubServicesFactory = createHubServicesFactory(intLogger, hubServerConfig);
+        IntLogger intLogger = hubServices.createIntLogger();
+        HubServerConfig hubServerConfig = hubServices.createHubServerConfig(intLogger);
+        HubServicesFactory hubServicesFactory = hubServices.createHubServicesFactory(intLogger, hubServerConfig);
 
         ProjectService projectService = hubServicesFactory.createProjectService();
         VersionBomPolicyStatusView versionBomPolicyStatusView = projectService.getPolicyStatusForProjectAndVersion("ek-test-scan-speed", "4.8.0-test");
@@ -130,34 +122,13 @@ class Application {
     }
 
     void getAllProjects() throws IntegrationException {
-        HubServicesFactory hubServicesFactory = createHubServicesFactory();
+        HubServicesFactory hubServicesFactory = hubServices.createHubServicesFactory();
 
         HubService hubService = hubServicesFactory.createHubService();
         List<ProjectView> allProjects = hubService.getAllResponses(ApiDiscovery.PROJECTS_LINK_RESPONSE);
         allProjects.each {
-            println it.name
+            println it.name + " " + it._meta.href
         }
-    }
-
-    void scanAPath() {
-        IntLogger intLogger = createIntLogger();
-        HubServerConfig hubServerConfig = createHubServerConfig(intLogger);
-        HubServicesFactory hubServicesFactory = createHubServicesFactory(intLogger, hubServerConfig);
-
-        SignatureScannerService signatureScannerService = hubServicesFactory.createSignatureScannerService();
-        HubScanConfigBuilder hubScanConfigBuilder = new HubScanConfigBuilder();
-        hubScanConfigBuilder.toolsDir = new File("/Users/ekerwin/working/java_scanner");
-        hubScanConfigBuilder.workingDirectory = new File("/Users/ekerwin/working/scan_output");
-        hubScanConfigBuilder.addScanTargetPath("/Users/ekerwin/Downloads/winzipmacedition60.dmg");
-        hubScanConfigBuilder.setScanMemory(4096);
-        HubScanConfig hubScanConfig = hubScanConfigBuilder.build()
-
-        ProjectRequestBuilder projectRequestBuilder = new ProjectRequestBuilder();
-        projectRequestBuilder.setProjectName("ek-winzip");
-        projectRequestBuilder.setVersionName("0.0.1-SNAPSHOT");
-        ProjectRequest projectRequest = projectRequestBuilder.build();
-
-        signatureScannerService.executeScans(hubServerConfig, hubScanConfig, projectRequest);
     }
 
     public void getAllNotificationsForTheLastHour() throws IntegrationException {
@@ -182,41 +153,4 @@ class Application {
         }
     }
 
-    public HubServicesFactory createHubServicesFactory() {
-        IntLogger intLogger = createIntLogger();
-        HubServerConfig hubServerConfig = createHubServerConfig(intLogger);
-        return createHubServicesFactory(intLogger, hubServerConfig);
-    }
-
-    public IntLogger createIntLogger() {
-        final IntLogger intLogger = new Slf4jIntLogger(logger);
-        return intLogger;
-    }
-
-    public HubServerConfig createHubServerConfig(IntLogger intLogger) {
-        final HubServerConfigBuilder hubServerConfigBuilder = new HubServerConfigBuilder();
-        //        hubServerConfigBuilder.setUrl(System.getenv().get("HUB_QA_URL"));
-        hubServerConfigBuilder.setUrl(System.getenv().get("INT-HUB02_URL"));
-        //        hubServerConfigBuilder.setUrl(System.getenv().get("INT-HUB04_URL"));
-        //        hubServerConfigBuilder.setUrl(System.getenv().get("BLACKDUCK_HUB_URL"));
-        hubServerConfigBuilder.setApiToken(System.getenv().get("BLACKDUCK_HUB_API_TOKEN"));
-        hubServerConfigBuilder.setUsername(System.getenv().get("BLACKDUCK_HUB_USERNAME"));
-        hubServerConfigBuilder.setPassword(System.getenv().get("BLACKDUCK_HUB_PASSWORD"));
-        hubServerConfigBuilder.setTimeout(120);
-        hubServerConfigBuilder.setTrustCert(true);
-        hubServerConfigBuilder.setLogger(intLogger);
-
-        final HubServerConfig hubServerConfig = hubServerConfigBuilder.build();
-        return hubServerConfig;
-    }
-
-    public HubServicesFactory createHubServicesFactory(IntLogger intLogger, HubServerConfig hubServerConfig) throws EncryptionException {
-        final BlackduckRestConnection blackduckRestConnection = hubServerConfig.createRestConnection(intLogger);
-
-        final Gson gson = HubServicesFactory.createDefaultGson();
-        final JsonParser jsonParser = HubServicesFactory.createDefaultJsonParser();
-        final HubServicesFactory hubServicesFactory = new HubServicesFactory(gson, jsonParser, blackduckRestConnection, intLogger);
-
-        return hubServicesFactory;
-    }
 }

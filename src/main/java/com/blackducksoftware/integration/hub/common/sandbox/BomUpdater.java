@@ -6,13 +6,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.blackducksoftware.integration.exception.IntegrationException;
-import com.blackducksoftware.integration.hub.api.enumeration.ScanSummaryStatusType;
-import com.blackducksoftware.integration.hub.api.generated.view.CodeLocationView;
-import com.blackducksoftware.integration.hub.api.view.ScanSummaryView;
-import com.blackducksoftware.integration.hub.exception.DoesNotExistException;
-import com.blackducksoftware.integration.hub.service.CodeLocationService;
-import com.blackducksoftware.integration.hub.service.HubService;
+import com.synopsys.integration.blackduck.api.enumeration.ScanSummaryStatusType;
+import com.synopsys.integration.blackduck.api.generated.view.CodeLocationView;
+import com.synopsys.integration.blackduck.api.view.ScanSummaryView;
+import com.synopsys.integration.blackduck.exception.DoesNotExistException;
+import com.synopsys.integration.blackduck.service.CodeLocationService;
+import com.synopsys.integration.blackduck.service.HubService;
+import com.synopsys.integration.exception.IntegrationException;
 
 public class BomUpdater {
     private final Logger logger = LoggerFactory.getLogger(BomUpdater.class);

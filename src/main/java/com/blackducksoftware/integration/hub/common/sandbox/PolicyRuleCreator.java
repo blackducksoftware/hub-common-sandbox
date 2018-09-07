@@ -1,17 +1,17 @@
 package com.blackducksoftware.integration.hub.common.sandbox;
 
-import com.blackducksoftware.integration.exception.IntegrationException;
-import com.blackducksoftware.integration.hub.api.enumeration.PolicyRuleConditionOperatorType;
-import com.blackducksoftware.integration.hub.api.generated.component.PolicyRuleExpressionSetView;
-import com.blackducksoftware.integration.hub.api.generated.view.ComponentVersionView;
-import com.blackducksoftware.integration.hub.api.generated.view.PolicyRuleViewV2;
-import com.blackducksoftware.integration.hub.api.view.MetaHandler;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
-import com.blackducksoftware.integration.hub.exception.DoesNotExistException;
-import com.blackducksoftware.integration.hub.service.ComponentService;
-import com.blackducksoftware.integration.hub.service.PolicyRuleService;
-import com.blackducksoftware.integration.hub.service.model.PolicyRuleExpressionSetBuilder;
+import com.synopsys.integration.blackduck.api.enumeration.PolicyRuleConditionOperatorType;
+import com.synopsys.integration.blackduck.api.generated.component.PolicyRuleExpressionSetView;
+import com.synopsys.integration.blackduck.api.generated.view.ComponentVersionView;
+import com.synopsys.integration.blackduck.api.generated.view.PolicyRuleViewV2;
+import com.synopsys.integration.blackduck.api.view.MetaHandler;
+import com.synopsys.integration.blackduck.exception.DoesNotExistException;
+import com.synopsys.integration.blackduck.service.ComponentService;
+import com.synopsys.integration.blackduck.service.PolicyRuleService;
+import com.synopsys.integration.blackduck.service.model.PolicyRuleExpressionSetBuilder;
+import com.synopsys.integration.exception.IntegrationException;
+import com.synopsys.integration.hub.bdio.model.externalid.ExternalId;
+import com.synopsys.integration.hub.bdio.model.externalid.ExternalIdFactory;
 
 public class PolicyRuleCreator {
     public static final String NO_FILEUPLOAD_1_2_1 = "No Commons FileUpload 1.2.1";
